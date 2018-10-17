@@ -38,7 +38,7 @@ class ChessState {
     //copy constructor
     ChessState(ChessState that) {
         m_rows = new int[8];
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
             this.m_rows[i] = that.m_rows[i];
     }
 
@@ -69,13 +69,13 @@ class ChessState {
         setPiece(5, 0, Bishop, true);
         setPiece(6, 0, Knight, true);
         setPiece(7, 0, Rook, true);
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
             setPiece(i, 1, Pawn, true);
-        for(int j = 2; j < 6; j++) {
-            for(int i = 0; i < 8; i++)
+        for (int j = 2; j < 6; j++) {
+            for (int i = 0; i < 8; i++)
                 setPiece(i, j, None, false);
         }
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
             setPiece(i, 6, Pawn, false);
         setPiece(0, 7, Rook, false);
         setPiece(1, 7, Knight, false);
@@ -88,27 +88,38 @@ class ChessState {
     }
 
     /// Positive means white is favored. Negative means black is favored.
-    int heuristic(Random rand)
-    {
+    int heuristic(Random rand) {
         int score = 0;
-        for(int y = 0; y < 8; y++)
-        {
-            for(int x = 0; x < 8; x++)
-            {
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
                 int p = getPiece(x, y);
                 int value;
-                switch(p)
-                {
-                    case None: value = 0; break;
-                    case Pawn: value = 10; break;
-                    case Rook: value = 63; break;
-                    case Knight: value = 31; break;
-                    case Bishop: value = 36; break;
-                    case Queen: value = 88; break;
-                    case King: value = 500; break;
-                    default: throw new RuntimeException("what?");
+                switch (p) {
+                    case None:
+                        value = 0;
+                        break;
+                    case Pawn:
+                        value = 10;
+                        break;
+                    case Rook:
+                        value = 63;
+                        break;
+                    case Knight:
+                        value = 31;
+                        break;
+                    case Bishop:
+                        value = 36;
+                        break;
+                    case Queen:
+                        value = 88;
+                        break;
+                    case King:
+                        value = 500;
+                        break;
+                    default:
+                        throw new RuntimeException("what?");
                 }
-                if(isWhite(x, y))
+                if (isWhite(x, y))
                     score += value;
                 else
                     score -= value;
@@ -118,8 +129,7 @@ class ChessState {
     }
 
     /// Iterates through all the possible moves for the specified color.
-    static class ChessMoveIterator
-    {
+    static class ChessMoveIterator {
         int x, y;
         ArrayList<Integer> moves;
         ChessState state;
@@ -136,17 +146,17 @@ class ChessState {
         }
 
         private void advance() {
-            if(moves != null && moves.size() >= 2) {
+            if (moves != null && moves.size() >= 2) {
                 moves.remove(moves.size() - 1);
                 moves.remove(moves.size() - 1);
             }
-            while(y < 8 && (moves == null || moves.size() < 2)) {
-                if(++x >= 8) {
+            while (y < 8 && (moves == null || moves.size() < 2)) {
+                if (++x >= 8) {
                     x = 0;
                     y++;
                 }
-                if(y < 8) {
-                    if(state.getPiece(x, y) != ChessState.None && state.isWhite(x, y) == white)
+                if (y < 8) {
+                    if (state.getPiece(x, y) != ChessState.None && state.isWhite(x, y) == white)
                         moves = state.moves(x, y);
                     else
                         moves = null;
@@ -179,47 +189,62 @@ class ChessState {
     /// Returns true iff the parameters represent a valid move
     boolean isValidMove(int xSrc, int ySrc, int xDest, int yDest) {
         ArrayList<Integer> possible_moves = moves(xSrc, ySrc);
-        for(int i = 0; i < possible_moves.size(); i += 2) {
-            if(possible_moves.get(i).intValue() == xDest && possible_moves.get(i + 1).intValue() == yDest)
+        for (int i = 0; i < possible_moves.size(); i += 2) {
+            if (possible_moves.get(i).intValue() == xDest && possible_moves.get(i + 1).intValue() == yDest)
                 return true;
         }
         return false;
     }
 
     /// Print a representation of the board to the specified stream
-    void printBoard(PrintStream stream)
-    {
+    void printBoard(PrintStream stream) {
         stream.println("  A  B  C  D  E  F  G  H");
         stream.print(" +");
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
             stream.print("--+");
         stream.println();
-        for(int j = 7; j >= 0; j--) {
-            stream.print(Character.toString((char)(49 + j)));
+        for (int j = 7; j >= 0; j--) {
+            stream.print(Character.toString((char) (49 + j)));
             stream.print("|");
-            for(int i = 0; i < 8; i++) {
+            for (int i = 0; i < 8; i++) {
                 int p = getPiece(i, j);
-                if(p != None) {
-                    if(isWhite(i, j))
+                if (p != None) {
+                    if (isWhite(i, j))
                         stream.print("w");
                     else
                         stream.print("b");
                 }
-                switch(p) {
-                    case None: stream.print("  "); break;
-                    case Pawn: stream.print("p"); break;
-                    case Rook: stream.print("r"); break;
-                    case Knight: stream.print("n"); break;
-                    case Bishop: stream.print("b"); break;
-                    case Queen: stream.print("q"); break;
-                    case King: stream.print("K"); break;
-                    default: stream.print("?"); break;
+                switch (p) {
+                    case None:
+                        stream.print("  ");
+                        break;
+                    case Pawn:
+                        stream.print("p");
+                        break;
+                    case Rook:
+                        stream.print("r");
+                        break;
+                    case Knight:
+                        stream.print("n");
+                        break;
+                    case Bishop:
+                        stream.print("b");
+                        break;
+                    case Queen:
+                        stream.print("q");
+                        break;
+                    case King:
+                        stream.print("K");
+                        break;
+                    default:
+                        stream.print("?");
+                        break;
                 }
                 stream.print("|");
             }
-            stream.print(Character.toString((char)(49 + j)));
+            stream.print(Character.toString((char) (49 + j)));
             stream.print("\n +");
-            for(int i = 0; i < 8; i++)
+            for (int i = 0; i < 8; i++)
                 stream.print("--+");
             stream.println();
         }
@@ -236,33 +261,32 @@ class ChessState {
         int i, j;
 
         //for every type of piece on the board, get the moves
-        switch(p) {
+        switch (p) {
             case Pawn:
-                if(bWhite) {
-                    if(!checkPawnMove(pOutMoves, col, inc(row), false, bWhite) && row == 1)
+                if (bWhite) {
+                    if (!checkPawnMove(pOutMoves, col, inc(row), false, bWhite) && row == 1)
                         checkPawnMove(pOutMoves, col, inc(inc(row)), false, bWhite);
                     checkPawnMove(pOutMoves, inc(col), inc(row), true, bWhite);
                     checkPawnMove(pOutMoves, dec(col), inc(row), true, bWhite);
-                }
-                else {
-                    if(!checkPawnMove(pOutMoves, col, dec(row), false, bWhite) && row == 6)
+                } else {
+                    if (!checkPawnMove(pOutMoves, col, dec(row), false, bWhite) && row == 6)
                         checkPawnMove(pOutMoves, col, dec(dec(row)), false, bWhite);
                     checkPawnMove(pOutMoves, inc(col), dec(row), true, bWhite);
                     checkPawnMove(pOutMoves, dec(col), dec(row), true, bWhite);
                 }
                 break;
             case Bishop:
-                for(i = inc(col), j=inc(row); true; i = inc(i), j = inc(j))
-                    if(checkMove(pOutMoves, i, j, bWhite))
+                for (i = inc(col), j = inc(row); true; i = inc(i), j = inc(j))
+                    if (checkMove(pOutMoves, i, j, bWhite))
                         break;
-                for(i = dec(col), j=inc(row); true; i = dec(i), j = inc(j))
-                    if(checkMove(pOutMoves, i, j, bWhite))
+                for (i = dec(col), j = inc(row); true; i = dec(i), j = inc(j))
+                    if (checkMove(pOutMoves, i, j, bWhite))
                         break;
-                for(i = inc(col), j=dec(row); true; i = inc(i), j = dec(j))
-                    if(checkMove(pOutMoves, i, j, bWhite))
+                for (i = inc(col), j = dec(row); true; i = inc(i), j = dec(j))
+                    if (checkMove(pOutMoves, i, j, bWhite))
                         break;
-                for(i = dec(col), j=dec(row); true; i = dec(i), j = dec(j))
-                    if(checkMove(pOutMoves, i, j, bWhite))
+                for (i = dec(col), j = dec(row); true; i = dec(i), j = dec(j))
+                    if (checkMove(pOutMoves, i, j, bWhite))
                         break;
                 break;
             case Knight:
@@ -276,43 +300,43 @@ class ChessState {
                 checkMove(pOutMoves, inc(inc(col)), dec(row), bWhite);
                 break;
             case Rook:
-                for(i = inc(col); true; i = inc(i))
-                    if(checkMove(pOutMoves, i, row, bWhite))
+                for (i = inc(col); true; i = inc(i))
+                    if (checkMove(pOutMoves, i, row, bWhite))
                         break;
-                for(i = dec(col); true; i = dec(i))
-                    if(checkMove(pOutMoves, i, row, bWhite))
+                for (i = dec(col); true; i = dec(i))
+                    if (checkMove(pOutMoves, i, row, bWhite))
                         break;
-                for(j = inc(row); true; j = inc(j))
-                    if(checkMove(pOutMoves, col, j, bWhite))
+                for (j = inc(row); true; j = inc(j))
+                    if (checkMove(pOutMoves, col, j, bWhite))
                         break;
-                for(j = dec(row); true; j = dec(j))
-                    if(checkMove(pOutMoves, col, j, bWhite))
+                for (j = dec(row); true; j = dec(j))
+                    if (checkMove(pOutMoves, col, j, bWhite))
                         break;
                 break;
             case Queen:
-                for(i = inc(col); true; i = inc(i))
-                    if(checkMove(pOutMoves, i, row, bWhite))
+                for (i = inc(col); true; i = inc(i))
+                    if (checkMove(pOutMoves, i, row, bWhite))
                         break;
-                for(i = dec(col); true; i = dec(i))
-                    if(checkMove(pOutMoves, i, row, bWhite))
+                for (i = dec(col); true; i = dec(i))
+                    if (checkMove(pOutMoves, i, row, bWhite))
                         break;
-                for(j = inc(row); true; j = inc(j))
-                    if(checkMove(pOutMoves, col, j, bWhite))
+                for (j = inc(row); true; j = inc(j))
+                    if (checkMove(pOutMoves, col, j, bWhite))
                         break;
-                for(j = dec(row); true; j = dec(j))
-                    if(checkMove(pOutMoves, col, j, bWhite))
+                for (j = dec(row); true; j = dec(j))
+                    if (checkMove(pOutMoves, col, j, bWhite))
                         break;
-                for(i = inc(col), j=inc(row); true; i = inc(i), j = inc(j))
-                    if(checkMove(pOutMoves, i, j, bWhite))
+                for (i = inc(col), j = inc(row); true; i = inc(i), j = inc(j))
+                    if (checkMove(pOutMoves, i, j, bWhite))
                         break;
-                for(i = dec(col), j=inc(row); true; i = dec(i), j = inc(j))
-                    if(checkMove(pOutMoves, i, j, bWhite))
+                for (i = dec(col), j = inc(row); true; i = dec(i), j = inc(j))
+                    if (checkMove(pOutMoves, i, j, bWhite))
                         break;
-                for(i = inc(col), j=dec(row); true; i = inc(i), j = dec(j))
-                    if(checkMove(pOutMoves, i, j, bWhite))
+                for (i = inc(col), j = dec(row); true; i = inc(i), j = dec(j))
+                    if (checkMove(pOutMoves, i, j, bWhite))
                         break;
-                for(i = dec(col), j=dec(row); true; i = dec(i), j = dec(j))
-                    if(checkMove(pOutMoves, i, j, bWhite))
+                for (i = dec(col), j = dec(row); true; i = dec(i), j = dec(j))
+                    if (checkMove(pOutMoves, i, j, bWhite))
                         break;
                 break;
             case King:
@@ -337,30 +361,30 @@ class ChessState {
     /// the king that was taken and return true to indicate that the move
     /// ended the game.
     boolean move(int xSrc, int ySrc, int xDest, int yDest) {
-        if(xSrc < 0 || xSrc >= 8 || ySrc < 0 || ySrc >= 8)
+        if (xSrc < 0 || xSrc >= 8 || ySrc < 0 || ySrc >= 8)
             throw new RuntimeException("out of range");
-        if(xDest < 0 || xDest >= 8 || yDest < 0 || yDest >= 8)
+        if (xDest < 0 || xDest >= 8 || yDest < 0 || yDest >= 8)
             throw new RuntimeException("out of range");
         int target = getPiece(xDest, yDest);
         int p = getPiece(xSrc, ySrc);
-        if(p == None)
+        if (p == None)
             throw new RuntimeException("There is no piece in the source location");
-        if(target != None && isWhite(xSrc, ySrc) == isWhite(xDest, yDest))
+        if (target != None && isWhite(xSrc, ySrc) == isWhite(xDest, yDest))
             throw new RuntimeException("It is illegal to take your own piece");
-        if(p == Pawn && (yDest == 0 || yDest == 7))
+        if (p == Pawn && (yDest == 0 || yDest == 7))
             p = Queen; // a pawn that crosses the board becomes a queen
         boolean white = isWhite(xSrc, ySrc);
         setPiece(xDest, yDest, p, white);
         setPiece(xSrc, ySrc, None, true);
-        if(target == King) {
+        if (target == King) {
             // If you take the opponent's king, remove all of the opponent's pieces. This
             // makes sure that look-ahead strategies don't try to look beyond the end of
             // the game (example: sacrifice a king for a king and some other piece.)
             int x, y;
-            for(y = 0; y < 8; y++) {
-                for(x = 0; x < 8; x++) {
-                    if(getPiece(x, y) != None) {
-                        if(isWhite(x, y) != white) {
+            for (y = 0; y < 8; y++) {
+                for (x = 0; x < 8; x++) {
+                    if (getPiece(x, y) != None) {
+                        if (isWhite(x, y) != white) {
                             setPiece(x, y, None, true);
                         }
                     }
@@ -373,24 +397,24 @@ class ChessState {
 
     //increment?
     static int inc(int pos) {
-        if(pos < 0 || pos >= 7)
+        if (pos < 0 || pos >= 7)
             return -1;
         return pos + 1;
     }
 
     //decrement?
     static int dec(int pos) {
-        if(pos < 1)
+        if (pos < 1)
             return -1;
-        return pos -1;
+        return pos - 1;
     }
 
     //
     boolean checkMove(ArrayList<Integer> pOutMoves, int col, int row, boolean bWhite) {
-        if(col < 0 || row < 0)
+        if (col < 0 || row < 0)
             return true;
         int p = getPiece(col, row);
-        if(p > 0 && isWhite(col, row) == bWhite)
+        if (p > 0 && isWhite(col, row) == bWhite)
             return true;
         pOutMoves.add(col);
         pOutMoves.add(row);
@@ -398,15 +422,14 @@ class ChessState {
     }
 
     boolean checkPawnMove(ArrayList<Integer> pOutMoves, int col, int row, boolean bDiagonal, boolean bWhite) {
-        if(col < 0 || row < 0)
+        if (col < 0 || row < 0)
             return true;
         int p = getPiece(col, row);
-        if(bDiagonal) {
-            if(p == None || isWhite(col, row) == bWhite)
+        if (bDiagonal) {
+            if (p == None || isWhite(col, row) == bWhite)
                 return true;
-        }
-        else {
-            if(p > 0)
+        } else {
+            if (p > 0)
                 return true;
         }
         pOutMoves.add(col);
@@ -422,58 +445,69 @@ class ChessState {
         int yDest;
     }
 
+    ChessState bestState(ChessState currentState, boolean isWhite) {
+        int bestVal = -200; // some smalllll number
+        ChessState bestState = new ChessState();
+        int miniVal;
+
+        if (isWhite) {
+            miniVal = miniMaxAB(currentState, whiteDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+        } else {
+            miniVal = miniMaxAB(currentState, blackDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+        }
+
+
+//        return miniVal;
+        return bestState;
+    }
+
+
     //operates on one board and then undoes it
     //could also be done by passing in a new Board() w/ copy constructor
-    private int miniMaxAB(ChessState state, int depth, int alpha , int beta, boolean maximizingPlayer) {
+    private int miniMaxAB(ChessState state, int depth, int alpha, int beta, boolean maximizingPlayer) {
 
-        if(depth == 0)
-        {
+        if (depth == 0) {
             Random r = new Random();
             return state.heuristic(r);
         }
 
-        if(maximizingPlayer)
-        {
+        if (maximizingPlayer) {
             ChessState s = new ChessState(state);
             int value = Integer.MIN_VALUE;
-
             ChessMoveIterator it = s.iterator(true);
-
             ChessState.ChessMove m;
-            while(it.hasNext())
-            {
+
+            while (it.hasNext()) {
                 m = it.next();
-                s.move(m.xSource,m.ySource,m.xDest,m.yDest);
-                value = max(value, miniMaxAB(s,depth-1, alpha, beta, false));
-                alpha = max(alpha,value);
-                if(alpha >= beta)
-                {
+                s.move(m.xSource, m.ySource, m.xDest, m.yDest);
+                value = max(value, miniMaxAB(s, depth - 1, alpha, beta, false));
+                alpha = max(alpha, value);
+                if (alpha >= beta) {
                     break;
                 }
             }
             return value;
-        }
-        else
-        {
+        } else {
             ChessState s = new ChessState(state);
             int value = Integer.MAX_VALUE;
             ChessMoveIterator it = state.iterator(false);
-
             ChessState.ChessMove m;
 
-            while(it.hasNext())
-            {
+            while (it.hasNext()) {
                 m = it.next();
-                s.move(m.xSource,m.ySource,m.xDest,m.yDest);
-                value = min(value, miniMaxAB(s,depth-1, alpha, beta, true));
-                alpha = min(beta,value);
-                if(alpha >= beta)
-                {
+                s.move(m.xSource, m.ySource, m.xDest, m.yDest);
+                value = min(value, miniMaxAB(s, depth - 1, alpha, beta, true));
+                alpha = min(beta, value);
+                if (alpha >= beta) {
                     break;
                 }
             }
             return value;
         }
+    }
+
+    public static void log(String v) {
+        System.out.println(v);
     }
 
     public static void main(String[] args) {
@@ -494,21 +528,33 @@ class ChessState {
 
         //while game is not over
         //depending on whose turn it is:
-        board.move(1/*B*/, 0/*1*/, 2/*C*/, 2/*3*/);
+//        board.move(1/*B*/, 0/*1*/, 2/*C*/, 2/*3*/);
         board.printBoard(System.out);
 
-        while(true)
-        {
-           //if white
-            //move = find best move
-            //board.move
-            // s.move(m.xSource, m.ySource, m.xDest, m.yDest);
-            //else
-            //^^^
+        boolean whiteTurn = true;
+        int i = 0;
+
+        while (i != 1) {
+            
+            board.printBoard(System.out);
+
+            if (whiteTurn) {
+                ChessState.ChessMove m = new ChessMove();
+//               m = board.findBestMove();
+                // s.move(m.xSource, m.ySource, m.xDest, m.yDest);
+//                board.printBoard(System.out);
+            }
+            else
+            {
+                log("black turn");
+                ChessState.ChessMove m = new ChessMove();
+//               m = board.findBestMove();
+                // s.move(m.xSource, m.ySource, m.xDest, m.yDest);
+//                board.printBoard(System.out);
+            }
+            whiteTurn = false;
+            i++;
         }
-
-
-
 
 
     }
