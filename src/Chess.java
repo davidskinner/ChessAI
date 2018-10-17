@@ -2,6 +2,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static java.lang.Math.min;
+
 /// Represents the state of a chess game
 class ChessState {
 
@@ -17,6 +19,10 @@ class ChessState {
     public static final int PieceMask = 7;
     public static final int WhiteMask = 8;
     public static final int AllMask = 15;
+    public static int whiteDepth;
+    public static int blackDepth;
+
+    Random rand = new Random();
 
     int[] m_rows;
 
@@ -414,25 +420,87 @@ class ChessState {
         int xDest;
         int yDest;
     }
-    
+
+    //operates on one board and then undoes it
+    //could also be done by passing in a new Board() w/ copy constructor
+    //TODO: figure out how to specify depth based on color
+    private int miniMaxAB(ChessState state, int depth, int alpha , int beta, boolean maximizingPlayer) {
+
+        int score = 
+
+        if (depth == whiteDepth)
+            return heuristic(rand);
+
+        if (!stillMove(board))
+            return 0;
+
+        if (maximizingPlayer) {
+
+            int best = Integer.MIN_VALUE;
+
+            // for each child node i.e. every board state of every possible move
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board.length; j++) {
+                    if (board[i][j].length() > 1) {
+                        String undo = board[i][j];
+                        board[i][j] = computer;
+
+                        //recursive branching, increase depth, toggles maximizingPlayer
+                        best = Math.max(best, miniMaxAB(board, depth + 1, !maximizingPlayer));
+
+                        board[i][j] = undo;
+                    }
+                }
+            }
+            return best;
+        } else {
+
+            //not maximizer val
+            int val = Integer.MAX_VALUE;
+
+            //loop through the board
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board.length; j++) {
+                    if (board[i][j].length() > 1) {
+                        String undo = board[i][j];
+                        board[i][j] = hooman;
+
+                        //recursive branching, increase depth, toggles maximizingPlayer
+                        val = min(val, miniMaxAB(board, depth + 1, !maximizingPlayer));
+
+                        board[i][j] = undo;
+                    }
+                }
+            }
+            return val;
+        }
+    }
+
     public static void main(String[] args) {
 
         //java Chess 3 5
 
-        System.out.println(args[0]);
-        System.out.println(args[1]);
+        //number of moves the white player looks ahead
+        whiteDepth = Integer.valueOf(args[0]);
 
-        int whiteArgument = Integer.valueOf(args[0]);
-        int blackArgument = Integer.valueOf(args[1]);
+        //number of moves the black player looks ahead
+        blackDepth = Integer.valueOf(args[1]);
 
-        System.out.println(whiteArgument + blackArgument);// == 8
+        ChessState board = new ChessState();
+        board.resetBoard();
+        board.printBoard(System.out);
 
-        ChessState s = new ChessState();
-        s.resetBoard();
-        s.printBoard(System.out);
         System.out.println();
-        s.move(1/*B*/, 0/*1*/, 2/*C*/, 2/*3*/);
-        s.printBoard(System.out);
+
+        //while game is not over
+        //depending on whose turn it is:
+        board.move(1/*B*/, 0/*1*/, 2/*C*/, 2/*3*/);
+        board.printBoard(System.out);
+
+
+
+
+
     }
 }
 
