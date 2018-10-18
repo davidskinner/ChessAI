@@ -1,3 +1,4 @@
+import javax.management.RuntimeMBeanException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
@@ -474,7 +475,12 @@ class ChessState {
             hoomanMove.yDest = Integer.valueOf(String.valueOf(hoomanEntry.charAt(3)));
         }
 
-        boolean didYouWin = this.move(hoomanMove.xSource, hoomanMove.ySource, hoomanMove.xDest, hoomanMove.yDest);
+        boolean didYouWin = false;
+
+        if(isValidMove(hoomanMove.xSource, hoomanMove.ySource, hoomanMove.xDest, hoomanMove.yDest))
+        {
+             didYouWin = this.move(hoomanMove.xSource, hoomanMove.ySource, hoomanMove.xDest, hoomanMove.yDest);
+        }
 
         if (didYouWin) {
             return true;
@@ -520,7 +526,7 @@ class ChessState {
                 m = it.next();
                 s.move(m.xSource, m.ySource, m.xDest, m.yDest);
                 value = min(value, miniMaxAB(s, depth - 1, alpha, beta, true));
-                alpha = min(beta, value);
+                beta = min(beta, value);
                 if (alpha >= beta) {
                     break;
                 }
@@ -538,19 +544,23 @@ class ChessState {
         boolean whiteTurn = true;
         boolean whiteHooman = false;
         boolean blackHooman = false;
+        int winner = 0;
+
+        System.out.println(args.length);
+        if(args.length != 2)
+            throw new RuntimeException("You must enter 2 space-separated integers for depth of tree for black and white");
+
         //number of moves the white player looks ahead
         whiteDepth = Integer.valueOf(args[0]);
 
         //number of moves the black player looks ahead
         blackDepth = Integer.valueOf(args[1]);
 
-        if(whiteDepth == 0)
-        {
-           whiteHooman = true;
+        if (whiteDepth == 0) {
+            whiteHooman = true;
         }
 
-        if(blackDepth == 0)
-        {
+        if (blackDepth == 0) {
             blackHooman = true;
         }
 
@@ -566,7 +576,6 @@ class ChessState {
 //        board.printBoard(System.out);
 
 
-
         int i = 0;
 
         while (i <= 1) {
@@ -576,12 +585,9 @@ class ChessState {
             if (whiteTurn) {
 
                 //is the player hooman or AI?
-                if(whiteHooman)
-                {
+                if (whiteHooman) {
                     board.hoomanMove(true);
-                }
-                else
-                {
+                } else {
                     //move a piece from the white side
                     ChessState.ChessMove m = new ChessMove();
                     m = board.bestState(board, true);
@@ -592,8 +598,7 @@ class ChessState {
             } else {
 
                 //is the player hooman or AI?
-                if(blackHooman)
-                {
+                if (blackHooman) {
                     //take in input from black player
                     board.hoomanMove(false);
                 }
