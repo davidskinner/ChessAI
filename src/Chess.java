@@ -1,6 +1,7 @@
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -445,9 +446,9 @@ class ChessState {
         int yDest;
     }
 
-    ChessState bestState(ChessState currentState, boolean isWhite) {
-        int bestVal = -200; // some smalllll number
-        ChessState bestState = new ChessState();
+    //this takes a move from minimaxab
+    ChessMove bestState(ChessState currentState, boolean isWhite) {
+        ChessMove bestState = new ChessMove();
         int miniVal;
 
         if (isWhite) {
@@ -456,9 +457,30 @@ class ChessState {
             miniVal = miniMaxAB(currentState, blackDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
         }
 
-
-//        return miniVal;
         return bestState;
+    }
+
+    boolean hoomanMove(boolean white) {
+        Scanner scanner = new Scanner(System.in);
+        ChessMove hoomanMove = new ChessMove();
+
+        String hoomanEntry = String.valueOf(scanner.next());
+
+        log(String.valueOf(hoomanEntry.length()));
+        if (hoomanEntry.length() == 4) {
+            hoomanMove.xSource = Integer.valueOf(String.valueOf(hoomanEntry.charAt(0)));
+            hoomanMove.ySource = Integer.valueOf(String.valueOf(hoomanEntry.charAt(1)));
+            hoomanMove.xDest = Integer.valueOf(String.valueOf(hoomanEntry.charAt(2)));
+            hoomanMove.yDest = Integer.valueOf(String.valueOf(hoomanEntry.charAt(3)));
+        }
+
+        boolean didYouWin = this.move(hoomanMove.xSource, hoomanMove.ySource, hoomanMove.xDest, hoomanMove.yDest);
+
+        if (didYouWin) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
@@ -480,6 +502,7 @@ class ChessState {
             while (it.hasNext()) {
                 m = it.next();
                 s.move(m.xSource, m.ySource, m.xDest, m.yDest);
+//                s.printBoard(System.out);
                 value = max(value, miniMaxAB(s, depth - 1, alpha, beta, false));
                 alpha = max(alpha, value);
                 if (alpha >= beta) {
@@ -512,13 +535,24 @@ class ChessState {
 
     public static void main(String[] args) {
 
-        //java Chess 3 5
-
+        boolean whiteTurn = true;
+        boolean whiteHooman = false;
+        boolean blackHooman = false;
         //number of moves the white player looks ahead
         whiteDepth = Integer.valueOf(args[0]);
 
         //number of moves the black player looks ahead
         blackDepth = Integer.valueOf(args[1]);
+
+        if(whiteDepth == 0)
+        {
+           whiteHooman = true;
+        }
+
+        if(blackDepth == 0)
+        {
+            blackHooman = true;
+        }
 
         ChessState board = new ChessState();
         board.resetBoard();
@@ -529,29 +563,47 @@ class ChessState {
         //while game is not over
         //depending on whose turn it is:
 //        board.move(1/*B*/, 0/*1*/, 2/*C*/, 2/*3*/);
-        board.printBoard(System.out);
+//        board.printBoard(System.out);
 
-        boolean whiteTurn = true;
+
+
         int i = 0;
 
-        while (i != 1) {
-            
+        while (i <= 1) {
+
             board.printBoard(System.out);
 
             if (whiteTurn) {
-                ChessState.ChessMove m = new ChessMove();
-//               m = board.findBestMove();
-                // s.move(m.xSource, m.ySource, m.xDest, m.yDest);
-//                board.printBoard(System.out);
-            }
-            else
-            {
+
+                //is the player hooman or AI?
+                if(whiteHooman)
+                {
+                    board.hoomanMove(true);
+                }
+                else
+                {
+                    //move a piece from the white side
+                    ChessState.ChessMove m = new ChessMove();
+                    m = board.bestState(board, true);
+                    board.move(m.xSource, m.ySource, m.xDest, m.yDest);
+                    board.printBoard(System.out);
+                }
+
+            } else {
+
+                //is the player hooman or AI?
+                if(blackHooman)
+                {
+                    //take in input from black player
+                    board.hoomanMove(false);
+                }
                 log("black turn");
                 ChessState.ChessMove m = new ChessMove();
 //               m = board.findBestMove();
                 // s.move(m.xSource, m.ySource, m.xDest, m.yDest);
 //                board.printBoard(System.out);
             }
+
             whiteTurn = false;
             i++;
         }
