@@ -1,9 +1,6 @@
 import javax.management.RuntimeMBeanException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -416,8 +413,7 @@ class ChessState
 		if (p == None)
 			throw new RuntimeException("There is no piece in the source location: " + String.valueOf(xSrc) + " , " + String.valueOf(ySrc));
 		if (target != None && isWhite(xSrc, ySrc) == isWhite(xDest, yDest))
-			throw new RuntimeException("It is illegal to take your own piece: " + String.valueOf(xSrc) + " , " + String.valueOf(ySrc) +" to "
-					+ String.valueOf(xDest) + " , " + String.valueOf(yDest));
+			throw new RuntimeException("It is illegal to take your own piece: " + String.valueOf(xSrc) + " , " + String.valueOf(ySrc) + " to " + String.valueOf(xDest) + " , " + String.valueOf(yDest));
 		if (p == Pawn && (yDest == 0 || yDest == 7))
 			p = Queen; // a pawn that crosses the board becomes a queen
 		boolean white = isWhite(xSrc, ySrc);
@@ -518,19 +514,23 @@ class ChessState
 
 		//gets all the white or black moves
 		ChessMoveIterator it = currentState.iterator(isWhite);
-		printIteratorSize(currentState,isWhite);
+		printIteratorSize(currentState, isWhite);
 
 		//go through every move
-		while(it.hasNext())
+		while (it.hasNext())
 		{
+			//take in next move
 			tempMove = it.next();
+
+			//make a new state from the current state, and apply move to it
 			ChessState tempState = new ChessState(currentState);
-			tempState.move(tempMove.xSource, tempMove.ySource, tempMove.xDest, tempMove.yDest);
+			//TODO:a;dlfajsdl;fkajl;
+//			tempState.move(tempMove.xSource, tempMove.ySource, tempMove.xDest, tempMove.yDest);
 			tempState.printBoard(System.out);
 
-			tempVal = tempState.miniMaxAB(tempState, whiteDepth, Integer.MIN_VALUE, Integer.MAX_VALUE,isWhite,isWhite);
+			tempVal = tempState.miniMaxAB(tempState, whiteDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhite, isWhite);
 
-			if(tempVal > bestVal)
+			if (tempVal > bestVal)
 			{
 				bestMove = tempMove;
 				bestVal = tempVal;
@@ -539,28 +539,63 @@ class ChessState
 		return bestMove;
 	}
 
-	boolean hoomanMove(boolean white)
+	boolean hoomanMove()
 	{
 
-		Scanner scanner = new Scanner(System.in);
-		ChessMove hoomanMove = new ChessMove();
+		HashMap<String, Integer> chessSet = new HashMap<>();
 
-		String hoomanEntry = String.valueOf(scanner.next());
+		chessSet.put("a", 0);
+		chessSet.put("b", 1);
+		chessSet.put("c", 2);
+		chessSet.put("d", 3);
+		chessSet.put("e", 4);
+		chessSet.put("f", 5);
+		chessSet.put("g", 6);
+		chessSet.put("h", 7);
+		chessSet.put("1", 0);
+		chessSet.put("2", 1);
+		chessSet.put("3", 2);
+		chessSet.put("4", 3);
+		chessSet.put("5", 4);
+		chessSet.put("6", 5);
+		chessSet.put("7", 6);
+		chessSet.put("8", 7);
 
-		log(String.valueOf(hoomanEntry.length()));
-		if (hoomanEntry.length() == 4)
-		{
-			hoomanMove.xSource = Integer.valueOf(String.valueOf(hoomanEntry.charAt(0)));
-			hoomanMove.ySource = Integer.valueOf(String.valueOf(hoomanEntry.charAt(1)));
-			hoomanMove.xDest = Integer.valueOf(String.valueOf(hoomanEntry.charAt(2)));
-			hoomanMove.yDest = Integer.valueOf(String.valueOf(hoomanEntry.charAt(3)));
-		}
-
+		boolean validMove = false;
 		boolean didYouWin = false;
 
-		if (isValidMove(hoomanMove.xSource, hoomanMove.ySource, hoomanMove.xDest, hoomanMove.yDest))
+		while (!validMove)
 		{
-			didYouWin = this.move(hoomanMove.xSource, hoomanMove.ySource, hoomanMove.xDest, hoomanMove.yDest);
+
+			Scanner scanner = new Scanner(System.in);
+			ChessMove hoomanMove = new ChessMove();
+
+			String hoomanEntry = String.valueOf(scanner.next());
+
+			log(String.valueOf(hoomanEntry.length()));
+			if (hoomanEntry.length() == 4)
+			{
+				//convert string values to the corresponding integer
+
+
+				hoomanMove.xSource = chessSet.get(String.valueOf(hoomanEntry.charAt(0)));
+				hoomanMove.ySource = chessSet.get(String.valueOf(hoomanEntry.charAt(1)));
+				hoomanMove.xDest = chessSet.get(String.valueOf(hoomanEntry.charAt(2)));
+				hoomanMove.yDest = chessSet.get(String.valueOf(hoomanEntry.charAt(3)));
+
+			}
+			printMove(hoomanMove);
+
+
+			if (isValidMove(hoomanMove.xSource, hoomanMove.ySource, hoomanMove.xDest, hoomanMove.yDest))
+			{
+				didYouWin = this.move(hoomanMove.xSource, hoomanMove.ySource, hoomanMove.xDest, hoomanMove.yDest);
+				validMove = true;
+			} else
+			{
+				validMove = false;
+				log("try again with a string like : b1a3");
+			}
 		}
 
 		if (didYouWin)
@@ -570,11 +605,13 @@ class ChessState
 		{
 			return false;
 		}
+
 	}
 
 	private int miniMaxAB(ChessState state, int depth, int alpha, int beta, boolean maximizingPlayer, boolean isWhite)
 	{
 		ChessState copiedState = new ChessState(state);
+		copiedState.printBoard(System.out);
 		int value;
 		ChessState.ChessMove m;
 		ChessMoveIterator it = copiedState.iterator(isWhite);
@@ -593,7 +630,6 @@ class ChessState
 			{
 				m = it.next();
 				copiedState.move(m.xSource, m.ySource, m.xDest, m.yDest);
-				copiedState.printBoard(System.out);
 				value = max(value, copiedState.miniMaxAB(copiedState, depth - 1, alpha, beta, !maximizingPlayer, !isWhite));
 				alpha = max(alpha, value);
 				if (alpha >= beta)
@@ -610,7 +646,6 @@ class ChessState
 			{
 				m = it.next();
 				copiedState.move(m.xSource, m.ySource, m.xDest, m.yDest);
-				copiedState.printBoard(System.out);
 				value = min(value, copiedState.miniMaxAB(copiedState, depth - 1, alpha, beta, !maximizingPlayer, !isWhite));
 				beta = min(beta, value);
 				if (alpha >= beta)
@@ -629,12 +664,12 @@ class ChessState
 		ArrayList<ChessMove> moveList = new ArrayList<>();
 
 		//see the number of possible moves for the initial node
-		while(testIt.hasNext())
+		while (testIt.hasNext())
 		{
 			testMove = testIt.next();
 			moveList.add(testMove);
 		}
-		log(String.valueOf(moveList.size()));
+		log("The number of possible moves: " + String.valueOf(moveList.size()));
 	}
 
 	public static void printMove(ChessMove move)
@@ -671,8 +706,7 @@ class ChessState
 		{
 			whiteHooman = true;
 			log("white is a hooman");
-		}
-		else
+		} else
 		{
 			log("white is a computer");
 		}
@@ -681,8 +715,7 @@ class ChessState
 		{
 			blackHooman = true;
 			log("black is a hooman");
-		}
-		else
+		} else
 		{
 			log("black is a computer");
 		}
@@ -695,24 +728,17 @@ class ChessState
 
 		System.out.println();
 
-		//while game is not over
-		//depending on whose turn it is:
-		//        board.move(1/*B*/, 0/*1*/, 2/*C*/, 2/*3*/);
-		//        board.printBoard(System.out);
-
-
 		int i = 0;
 
 		while (i <= 1)
 		{
 			if (whiteTurn)
 			{
-				//1002
 				//is the player hooman or AI?
 				if (whiteHooman)
 				{
-					board.hoomanMove(true);
-
+					log("Your move?");
+					board.hoomanMove();
 				} else
 				{
 					//move a piece from the white side
@@ -726,12 +752,11 @@ class ChessState
 
 			} else
 			{
-				//1705
 				//is the player hooman or AI?
 				if (blackHooman)
 				{
-					//take in input from black player
-					board.hoomanMove(false);
+					log("Your move?");
+					board.hoomanMove();
 				} else
 				{
 					//move a piece from the white side

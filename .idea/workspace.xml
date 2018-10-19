@@ -17,14 +17,14 @@
       <file leaf-file-name="Chess.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Chess.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="928">
-              <caret line="622" column="5" lean-forward="true" selection-start-line="622" selection-start-column="5" selection-end-line="622" selection-end-column="5" />
+            <state relative-caret-position="351">
+              <caret line="528" column="45" lean-forward="true" selection-start-line="528" selection-start-column="45" selection-end-line="528" selection-end-column="45" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#6528#6537#0" expanded="true" />
-                <element signature="e#16577#16578#0" expanded="true" />
-                <element signature="e#16605#16606#0" expanded="true" />
-                <marker date="1539910417227" expanded="true" signature="16653:16947" ph="//..." />
+                <element signature="e#6442#6451#0" expanded="true" />
+                <element signature="e#17293#17294#0" expanded="true" />
+                <element signature="e#17321#17322#0" expanded="true" />
+                <marker date="1539917106799" expanded="true" signature="17369:17663" ph="//..." />
               </folding>
             </state>
           </provider>
@@ -202,12 +202,12 @@
       <updated>1539791053176</updated>
       <workItem from="1539791056756" duration="13416000" />
       <workItem from="1539821937194" duration="5373000" />
-      <workItem from="1539864496413" duration="18596000" />
+      <workItem from="1539864496413" duration="23606000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37385000" />
+    <option name="totallyTimeSpent" value="42395000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -230,7 +230,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24062878" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29504234" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32889965" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32889965" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -241,7 +241,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4413543" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25272068" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -291,12 +291,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Chess.java</url>
-          <line>580</line>
+          <line>525</line>
           <properties />
-          <option name="timeStamp" value="20" />
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="21" />
+      <option name="time" value="23" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -307,10 +307,10 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6528#6537#0" expanded="true" />
-            <element signature="e#16577#16578#0" expanded="true" />
-            <element signature="e#16605#16606#0" expanded="true" />
-            <marker date="1539910417227" expanded="true" signature="16653:16947" ph="//..." />
+            <element signature="e#6442#6451#0" expanded="true" />
+            <element signature="e#17293#17294#0" expanded="true" />
+            <element signature="e#17321#17322#0" expanded="true" />
+            <marker date="1539917106799" expanded="true" signature="17369:17663" ph="//..." />
           </folding>
         </state>
       </provider>
@@ -321,24 +321,24 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6528#6537#0" expanded="true" />
-            <element signature="e#16577#16578#0" expanded="true" />
-            <element signature="e#16605#16606#0" expanded="true" />
-            <marker date="1539910417227" expanded="true" signature="16653:16947" ph="//..." />
+            <element signature="e#6442#6451#0" expanded="true" />
+            <element signature="e#17293#17294#0" expanded="true" />
+            <element signature="e#17321#17322#0" expanded="true" />
+            <marker date="1539917106799" expanded="true" signature="17369:17663" ph="//..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Chess.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="928">
-          <caret line="622" column="5" lean-forward="true" selection-start-line="622" selection-start-column="5" selection-end-line="622" selection-end-column="5" />
+        <state relative-caret-position="351">
+          <caret line="528" column="45" lean-forward="true" selection-start-line="528" selection-start-column="45" selection-end-line="528" selection-end-column="45" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6528#6537#0" expanded="true" />
-            <element signature="e#16577#16578#0" expanded="true" />
-            <element signature="e#16605#16606#0" expanded="true" />
-            <marker date="1539910417227" expanded="true" signature="16653:16947" ph="//..." />
+            <element signature="e#6442#6451#0" expanded="true" />
+            <element signature="e#17293#17294#0" expanded="true" />
+            <element signature="e#17321#17322#0" expanded="true" />
+            <marker date="1539917106799" expanded="true" signature="17369:17663" ph="//..." />
           </folding>
         </state>
       </provider>
