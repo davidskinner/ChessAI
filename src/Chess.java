@@ -524,11 +524,12 @@ class ChessState
 
 			//make a new state from the current state, and apply move to it
 			ChessState tempState = new ChessState(currentState);
+
 			//TODO:a;dlfajsdl;fkajl;
-//			tempState.move(tempMove.xSource, tempMove.ySource, tempMove.xDest, tempMove.yDest);
+			tempState.move(tempMove.xSource, tempMove.ySource, tempMove.xDest, tempMove.yDest);
 			tempState.printBoard(System.out);
 
-			tempVal = tempState.miniMaxAB(tempState, whiteDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhite, isWhite);
+			tempVal = tempState.miniMaxAB(tempState, whiteDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, true, isWhite);
 
 			if (tempVal > bestVal)
 			{
@@ -611,7 +612,7 @@ class ChessState
 	private int miniMaxAB(ChessState state, int depth, int alpha, int beta, boolean maximizingPlayer, boolean isWhite)
 	{
 		ChessState copiedState = new ChessState(state);
-		copiedState.printBoard(System.out);
+//		copiedState.printBoard(System.out);
 		int value;
 		ChessState.ChessMove m;
 		ChessMoveIterator it = copiedState.iterator(isWhite);
