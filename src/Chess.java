@@ -1,6 +1,7 @@
 import javax.management.RuntimeMBeanException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -510,38 +511,32 @@ class ChessState
 	//this takes a move from minimaxab
 	ChessMove bestState(ChessState currentState, boolean isWhite)
 	{
-		ChessMove bestJaun = new ChessMove();
-		ChessMove testJaun = new ChessMove();
+		ChessMove bestMove = new ChessMove();
+		ChessMove tempMove;
 		int bestVal = Integer.MIN_VALUE;
-		int miniVal = Integer.MIN_VALUE;
+		int tempVal;
 
 		//gets all the white or black moves
-		ChessMoveIterator it = iterator(isWhite);
+		ChessMoveIterator it = currentState.iterator(isWhite);
+		printIteratorSize(currentState,isWhite);
 
 		//go through every move
 		while(it.hasNext())
 		{
-			testJaun = it.next();
+			tempMove = it.next();
 			ChessState tempState = new ChessState(currentState);
-
-			tempState.move(testJaun.xSource, testJaun.ySource, testJaun.xDest, testJaun.yDest);
+			tempState.move(tempMove.xSource, tempMove.ySource, tempMove.xDest, tempMove.yDest);
 			tempState.printBoard(System.out);
 
-			if(isWhite)
-			{
-				miniVal = tempState.miniMaxAB(tempState, whiteDepth, Integer.MIN_VALUE, Integer.MAX_VALUE,true,true);
-			}
-			else
-			{
-				miniVal = tempState.miniMaxAB(tempState,whiteDepth,Integer.MIN_VALUE, Integer.MAX_VALUE,false,false);
-			}
+			tempVal = tempState.miniMaxAB(tempState, whiteDepth, Integer.MIN_VALUE, Integer.MAX_VALUE,isWhite,isWhite);
 
-			if(miniVal > bestVal)
+			if(tempVal > bestVal)
 			{
-				bestJaun = testJaun;
+				bestMove = tempMove;
+				bestVal = tempVal;
 			}
 		}
-		return bestJaun;
+		return bestMove;
 	}
 
 	boolean hoomanMove(boolean white)
@@ -577,35 +572,29 @@ class ChessState
 		}
 	}
 
-	//operates on one board and then undoes it
-	//could also be done by passing in a new Board() w/ copy constructor
 	private int miniMaxAB(ChessState state, int depth, int alpha, int beta, boolean maximizingPlayer, boolean isWhite)
 	{
-		ChessState s = new ChessState(state);
-//		s.resetBoard();
-//				s.printBoard(System.out);
+		ChessState copiedState = new ChessState(state);
 		int value;
+		ChessState.ChessMove m;
+		ChessMoveIterator it = copiedState.iterator(isWhite);
+		printIteratorSize(copiedState, isWhite);
 
-		if (depth == 0 && isWhite)
+		if (depth == 0)
 		{
-			return state.heuristic(rand);
+			return copiedState.heuristic(rand);
 		}
-//		else if(depth == 0 && !isWhite)
-//		{
-//			return -1 * state.heuristic(rand);
-//		}
 
 		if (maximizingPlayer)
 		{
 			value = Integer.MIN_VALUE;
-			ChessMoveIterator it = s.iterator(isWhite);
-			ChessState.ChessMove m;
 
 			while (it.hasNext())
 			{
 				m = it.next();
-				s.move(m.xSource, m.ySource, m.xDest, m.yDest);
-				value = max(value, s.miniMaxAB(s, depth - 1, alpha, beta, true, isWhite));
+				copiedState.move(m.xSource, m.ySource, m.xDest, m.yDest);
+				copiedState.printBoard(System.out);
+				value = max(value, copiedState.miniMaxAB(copiedState, depth - 1, alpha, beta, !maximizingPlayer, !isWhite));
 				alpha = max(alpha, value);
 				if (alpha >= beta)
 				{
@@ -613,20 +602,16 @@ class ChessState
 				}
 			}
 			return value;
-		}
-		else
+		} else
 		{
-
 			value = Integer.MAX_VALUE;
-			ChessMoveIterator it = s.iterator(isWhite);
-			ChessState.ChessMove m;
 
 			while (it.hasNext())
 			{
 				m = it.next();
-				s.move(m.xSource, m.ySource, m.xDest, m.yDest);
-				s.printBoard(System.out);
-				value = min(value, s.miniMaxAB(s, depth - 1, alpha, beta, false, isWhite));
+				copiedState.move(m.xSource, m.ySource, m.xDest, m.yDest);
+				copiedState.printBoard(System.out);
+				value = min(value, copiedState.miniMaxAB(copiedState, depth - 1, alpha, beta, !maximizingPlayer, !isWhite));
 				beta = min(beta, value);
 				if (alpha >= beta)
 				{
@@ -635,6 +620,29 @@ class ChessState
 			}
 			return value;
 		}
+	}
+
+	public static void printIteratorSize(ChessState state, boolean isWhite)
+	{
+		ChessMoveIterator testIt = state.iterator(isWhite);
+		ChessMove testMove;
+		ArrayList<ChessMove> moveList = new ArrayList<>();
+
+		//see the number of possible moves for the initial node
+		while(testIt.hasNext())
+		{
+			testMove = testIt.next();
+			moveList.add(testMove);
+		}
+		log(String.valueOf(moveList.size()));
+	}
+
+	public static void printMove(ChessMove move)
+	{
+		log(Integer.toString(move.xSource));
+		log(Integer.toString(move.ySource));
+		log(Integer.toString(move.xSource));
+		log(Integer.toString(move.ySource));
 	}
 
 	public static void log(String v)
@@ -708,8 +716,7 @@ class ChessState
 				} else
 				{
 					//move a piece from the white side
-					ChessState.ChessMove m = new ChessMove();
-					m = board.bestState(board, true);
+					ChessState.ChessMove m = board.bestState(board, true);
 					board.move(m.xSource, m.ySource, m.xDest, m.yDest);
 					board.printBoard(System.out);
 					log("");
