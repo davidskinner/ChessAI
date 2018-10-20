@@ -403,7 +403,6 @@ class ChessState
 	/// ended the game.
 	boolean move(int xSrc, int ySrc, int xDest, int yDest)
 	{
-
 		if (xSrc < 0 || xSrc >= 8 || ySrc < 0 || ySrc >= 8)
 			throw new RuntimeException("out of range");
 		if (xDest < 0 || xDest >= 8 || yDest < 0 || yDest >= 8)
@@ -507,37 +506,78 @@ class ChessState
 	//this takes a move from minimaxab
 	ChessMove bestState(ChessState currentState, boolean isWhite)
 	{
-		ChessMove bestMove = new ChessMove();
-		ChessMove tempMove;
-		int bestVal = Integer.MIN_VALUE;
-		int tempVal;
-
-		//gets all the white or black moves
-		ChessMoveIterator it = currentState.iterator(isWhite);
-		printIteratorSize(currentState, isWhite);
-
-		//go through every move
-		while (it.hasNext())
+		if(isWhite)
 		{
-			//take in next move
-			tempMove = it.next();
+			ChessMove bestMove = new ChessMove();
+			ChessMove tempMove = new ChessMove();
+			int bestVal = Integer.MIN_VALUE;
+			int tempVal = 0;
 
-			//make a new state from the current state, and apply move to it
-			ChessState tempState = new ChessState(currentState);
+			//gets all the white or black moves
+			ChessMoveIterator it = currentState.iterator(isWhite);
+			//		printIteratorSize(currentState, isWhite);
 
-			//TODO:a;dlfajsdl;fkajl;
-			tempState.move(tempMove.xSource, tempMove.ySource, tempMove.xDest, tempMove.yDest);
-			tempState.printBoard(System.out);
-
-			tempVal = tempState.miniMaxAB(tempState, whiteDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, true, isWhite);
-
-			if (tempVal > bestVal)
+			//go through every move
+			while (it.hasNext())
 			{
-				bestMove = tempMove;
-				bestVal = tempVal;
+				//take in next move
+				tempMove = it.next();
+
+				//make a new state from the current state, and apply move to it
+				ChessState tempState = new ChessState(currentState);
+
+				tempState.move(tempMove.xSource, tempMove.ySource, tempMove.xDest, tempMove.yDest);
+				//			tempState.printBoard(System.out);
+
+				//minus 1 because we have already done a move
+				if (isWhite)
+					tempVal = tempState.miniMaxAB(tempState, whiteDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, !isWhite, !isWhite);
+
+				if (tempVal > bestVal)
+				{
+					bestMove = tempMove;
+					bestVal = tempVal;
+				}
 			}
+			return bestMove;
 		}
-		return bestMove;
+		else
+		{
+			ChessMove bestMove = new ChessMove();
+			ChessMove tempMove = new ChessMove();
+			int bestVal = Integer.MAX_VALUE;
+			int tempVal = 0;
+
+			//gets all the white or black moves
+			ChessMoveIterator it = currentState.iterator(isWhite);
+			//		printIteratorSize(currentState, isWhite);
+
+			//go through every move
+			while (it.hasNext())
+			{
+				//take in next move
+				tempMove = it.next();
+
+				//make a new state from the current state, and apply move to it
+				ChessState tempState = new ChessState(currentState);
+
+				tempState.move(tempMove.xSource, tempMove.ySource, tempMove.xDest, tempMove.yDest);
+				//			tempState.printBoard(System.out);
+
+				//minus 1 because we have already done a move
+
+					tempVal = tempState.miniMaxAB(tempState, blackDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, !isWhite, !isWhite);
+
+
+				if (tempVal < bestVal)
+				{
+					bestMove = tempMove;
+					bestVal = tempVal;
+				}
+			}
+			return bestMove;
+		}
+
 	}
 
 	boolean hoomanMove()
@@ -611,28 +651,33 @@ class ChessState
 
 	private int miniMaxAB(ChessState state, int depth, int alpha, int beta, boolean maximizingPlayer, boolean isWhite)
 	{
-		ChessState copiedState = new ChessState(state);
-//		copiedState.printBoard(System.out);
 		int value;
-		ChessState.ChessMove m;
-		ChessMoveIterator it = copiedState.iterator(isWhite);
-		printIteratorSize(copiedState, isWhite);
 
 		if (depth == 0)
 		{
-			return copiedState.heuristic(rand);
+			rand.setSeed(System.currentTimeMillis());
+			return state.heuristic(rand);
 		}
 
 		if (maximizingPlayer)
 		{
 			value = Integer.MIN_VALUE;
+			ChessState tempState = new ChessState(state);
+			ChessState.ChessMove m;
+			ChessMoveIterator it = new ChessMoveIterator(tempState, isWhite);
 
 			while (it.hasNext())
 			{
+				tempState = new ChessState(state);
 				m = it.next();
-				copiedState.move(m.xSource, m.ySource, m.xDest, m.yDest);
-				value = max(value, copiedState.miniMaxAB(copiedState, depth - 1, alpha, beta, !maximizingPlayer, !isWhite));
+				tempState.move(m.xSource, m.ySource, m.xDest, m.yDest);
+				//				tempState.printBoard(System.out);
+				value = max(value, tempState.miniMaxAB(tempState, depth - 1, alpha, beta, !maximizingPlayer, !isWhite));
 				alpha = max(alpha, value);
+//				tempState = new ChessState(state);
+
+				//				it = new ChessMoveIterator(tempState, isWhite);
+
 				if (alpha >= beta)
 				{
 					break;
@@ -642,13 +687,22 @@ class ChessState
 		} else
 		{
 			value = Integer.MAX_VALUE;
+			ChessState tempState = new ChessState(state);
+			ChessState.ChessMove m;
+			ChessMoveIterator it = new ChessMoveIterator(tempState, isWhite);
 
 			while (it.hasNext())
 			{
+				tempState = new ChessState(state);
 				m = it.next();
-				copiedState.move(m.xSource, m.ySource, m.xDest, m.yDest);
-				value = min(value, copiedState.miniMaxAB(copiedState, depth - 1, alpha, beta, !maximizingPlayer, !isWhite));
+				tempState.move(m.xSource, m.ySource, m.xDest, m.yDest);
+				//				tempState.printBoard(System.out);
+				value = min(value, tempState.miniMaxAB(tempState, depth - 1, alpha, beta, !maximizingPlayer, !isWhite));
 				beta = min(beta, value);
+//				tempState = new ChessState(state);
+
+				//				it = new ChessMoveIterator(tempState, isWhite);
+
 				if (alpha >= beta)
 				{
 					break;
@@ -656,6 +710,22 @@ class ChessState
 			}
 			return value;
 		}
+	}
+
+
+	public static int getIteratorSize(ChessState state, boolean isWhite)
+	{
+		ChessMoveIterator testIt = state.iterator(isWhite);
+		ChessMove testMove;
+		ArrayList<ChessMove> moveList = new ArrayList<>();
+
+		//see the number of possible moves for the initial node
+		while (testIt.hasNext())
+		{
+			testMove = testIt.next();
+			moveList.add(testMove);
+		}
+		return moveList.size();
 	}
 
 	public static void printIteratorSize(ChessState state, boolean isWhite)
@@ -725,14 +795,16 @@ class ChessState
 
 		ChessState board = new ChessState();
 		board.resetBoard();
-		board.printBoard(System.out);
 
 		System.out.println();
 
 		int i = 0;
 
-		while (i <= 1)
+		while (true)
 		{
+			//			board.printBoard(System.out);
+			log(String.valueOf(i));
+
 			if (whiteTurn)
 			{
 				//is the player hooman or AI?
@@ -750,6 +822,7 @@ class ChessState
 				}
 				board.printBoard(System.out);
 				log("");
+				whiteTurn = false;
 
 			} else
 			{
@@ -760,19 +833,30 @@ class ChessState
 					board.hoomanMove();
 				} else
 				{
-					//move a piece from the white side
-					ChessState.ChessMove m = new ChessMove();
+					ChessState.ChessMove m;
 					m = board.bestState(board, false);
 					board.move(m.xSource, m.ySource, m.xDest, m.yDest);
 					board.printBoard(System.out);
 					log("");
 				}
 
-				board.printBoard(System.out);
-				log("");
+				//				board.printBoard(System.out);
+				//				log("");
+				whiteTurn = true;
+
 			}
 
-			whiteTurn = false;
+			//if game over break
+			if (getIteratorSize(board, true) == 0 || getIteratorSize(board, true) <= 4 )
+			{
+				log("black wins");
+				break;
+			} else if (getIteratorSize(board, false) == 0 || getIteratorSize(board, false) <= 4)
+			{
+				log("white wins");
+				break;
+			}
+
 			i++;
 		}
 
